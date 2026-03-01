@@ -1,7 +1,7 @@
 // Import MCP SDK components
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { McpUnity } from './unity/mcpUnity.js';
+import { ConnectionStateChange, McpUnity } from './unity/mcpUnity.js';
 import { Logger, LogLevel } from './utils/logger.js';
 import { registerCreateSceneTool } from './tools/createSceneTool.js';
 import { registerMenuItemTool } from './tools/menuItemTool.js';
@@ -145,6 +145,12 @@ async function shutdown() {
 
 // Start the server
 startServer();
+
+mcpUnity.onConnectionStateChange((connectionStateChange: ConnectionStateChange) => {
+  if (connectionStateChange.reason == "Replaced by new connection") {
+    shutdown()
+  }
+});
 
 // Handle shutdown signals
 process.on('SIGINT', shutdown);

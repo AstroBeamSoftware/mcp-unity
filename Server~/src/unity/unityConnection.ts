@@ -281,7 +281,7 @@ export class UnityConnection extends EventEmitter {
         this.ws = null;
 
         // Handle reconnection if not manual disconnect
-        if (!this.isManualDisconnect) {
+        if (!this.isManualDisconnect && reason !== "Replaced by new connection") {
           this.handleConnectionFailure(new McpUnityError(ErrorType.CONNECTION, reason));
         } else {
           this.setState(ConnectionState.Disconnected, reason);
